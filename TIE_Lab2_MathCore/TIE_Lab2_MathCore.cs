@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace TIE_Lab2_MathCore
 {
-    public class TIE_Lab2_MathCore
+    public class MathCore
     {
         private bool _is_probabilities_generated;
         private List<List<double>> _probabilites;
 
-        public TIE_Lab2_MathCore()
+        public MathCore()
         {
             _probabilites = new List<List<double>>();
             _is_probabilities_generated = false;
         }
 
-        public TIE_Lab2_MathCore(UInt16 matrix_size) : this()
+        public MathCore(UInt16 matrix_size) : this()
         {
             if (matrix_size == 0)
             {
@@ -74,14 +74,15 @@ namespace TIE_Lab2_MathCore
 
             // Generate random borderse in interval between 0 and 1 and small intervals will be needed.
             Random random = new Random();
-            List<double> borders = new List<double>(length-1);
+            List<double> borders = new List<double>(length - 1);
             for (int random_border = 0; random_border < length - 1; random_border++)
             {
                 borders.Add(random.NextDouble());
             }
             borders.Sort();
             // Calculating intervals.
-            double summary = 0;
+            double summary = borders[0];
+            probabilities.Add(borders[0]);
             for (int border_index = 0; border_index < borders.Count - 1; border_index++)
             {
                 probabilities.Add(borders[border_index + 1] - borders[border_index]);
@@ -97,7 +98,7 @@ namespace TIE_Lab2_MathCore
             CheckMatrixSizeSet();
             // Generating different p(x).
             List<double> p_x_list = GenerateRandomProbabilitiesList(_probabilites.Count);
-            
+
             for (int row_index = 0; row_index < _probabilites.Count; ++row_index)
             {
                 _probabilites[row_index].Clear();
