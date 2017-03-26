@@ -17,7 +17,7 @@ namespace TIE_Lab2_MathCore
             _is_probabilities_generated = false;
         }
 
-        public TIE_Lab2_MathCore(UInt16 matrix_size)
+        public TIE_Lab2_MathCore(UInt16 matrix_size) : this()
         {
             if (matrix_size == 0)
             {
@@ -26,7 +26,7 @@ namespace TIE_Lab2_MathCore
             // Initialize matrix.
             for (UInt16 index = 0; index < matrix_size; ++index)
             {
-                _probabilites.Add(new List<double>((Int32)matrix_size));
+                _probabilites.Add(CreateList(matrix_size));
             }
             // Filling it.
             GenerateNewProbabilities();
@@ -42,7 +42,7 @@ namespace TIE_Lab2_MathCore
             _probabilites.Clear();
             for (UInt16 index = 0; index < matrix_size; ++index)
             {
-                _probabilites.Add(new List<double>((Int32)matrix_size));
+                _probabilites.Add(CreateList(matrix_size));
             }
         }
 
@@ -71,12 +71,13 @@ namespace TIE_Lab2_MathCore
             }
 
             List<double> probabilities = new List<double>(length);
+
             // Generate random borderse in interval between 0 and 1 and small intervals will be needed.
             Random random = new Random();
             List<double> borders = new List<double>(length-1);
             for (int random_border = 0; random_border < borders.Count; random_border++)
             {
-                borders[random_border] = random.NextDouble();
+                borders.Add(random.NextDouble());
             }
             borders.Sort();
             // Calculating intervals.
@@ -119,9 +120,24 @@ namespace TIE_Lab2_MathCore
             // Creating new matrix.
             for (UInt16 index = 0; index < matrix_size; ++index)
             {
-                result_matrix.Add(new List<double>(matrix_size));
+                result_matrix.Add(CreateList(matrix_size));
             }
             return result_matrix;
+        }
+
+        private List<double> CreateList(int size)
+        {
+            if (size <= 0)
+            {
+                throw new Exception("Cannot create list with negative or zero size.");
+            }
+            List<double> result_list = new List<double>(size);
+            // Creating new matrix.
+            for (UInt16 index = 0; index < size; ++index)
+            {
+                result_list.Add(0);
+            }
+            return result_list;
         }
 
         public IEnumerable<ICollection<double>> PAB()
@@ -190,7 +206,7 @@ namespace TIE_Lab2_MathCore
                             throw new Exception("Algorithm for calculation from new source is undefined.");
                     }
                 }
-                result_matrix[col] = sum * -1.0d;
+                result_matrix.Add(sum * -1.0d);
             }
             return result_matrix;
         }
