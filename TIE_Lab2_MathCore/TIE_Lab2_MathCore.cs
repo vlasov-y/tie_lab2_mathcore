@@ -75,7 +75,7 @@ namespace TIE_Lab2_MathCore
             // Generate random borderse in interval between 0 and 1 and small intervals will be needed.
             Random random = new Random();
             List<double> borders = new List<double>(length-1);
-            for (int random_border = 0; random_border < borders.Count; random_border++)
+            for (int random_border = 0; random_border < length - 1; random_border++)
             {
                 borders.Add(random.NextDouble());
             }
