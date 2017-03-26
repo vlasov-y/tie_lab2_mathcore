@@ -149,6 +149,20 @@ namespace TIE_Lab2_MathCore
             return result * -1.0d;
         }
 
+        public double HBsA()
+        {
+            double result = 0;
+            List<double> hbsai = (List<double>)HBsAi();
+            List<double> pi = (List<double>)Pi(HSource.A);
+
+            for (int i = 0; i < hbsai.Count; i++)
+            {
+                result += hbsai[i] * pi[i];
+            }
+
+            return result * -1.0d;
+        }
+
         private enum HsSource
         {
             AsB,
@@ -181,12 +195,12 @@ namespace TIE_Lab2_MathCore
             return result_matrix;
         }
 
-        public ICollection<double> HAsBi()
+        private ICollection<double> HAsBi()
         {
             return Hs(HsSource.AsB);
         }
 
-        public ICollection<double> HBsAi()
+        private ICollection<double> HBsAi()
         {
             return Hs(HsSource.BsA);
         }
