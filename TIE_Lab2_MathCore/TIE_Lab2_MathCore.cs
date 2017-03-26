@@ -150,7 +150,8 @@ namespace TIE_Lab2_MathCore
 
         public double HAB()
         {
-            return HA() - HAsB();
+            double result = HA() - HAsB();
+            return result < 0 ? result * -1 : result;
         }
 
         public double HAsB()
