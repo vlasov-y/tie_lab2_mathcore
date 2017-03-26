@@ -10,11 +10,13 @@ namespace TIE_Lab2_MathCore
     {
         private bool _is_probabilities_generated;
         private List<List<double>> _probabilites;
+        private static Random random;
 
         public MathCore()
         {
             _probabilites = new List<List<double>>();
             _is_probabilities_generated = false;
+            random = new Random();
         }
 
         public MathCore(UInt16 matrix_size) : this()
@@ -73,21 +75,17 @@ namespace TIE_Lab2_MathCore
             List<double> probabilities = new List<double>(length);
 
             // Generate random borderse in interval between 0 and 1 and small intervals will be needed.
-            Random random = new Random();
             List<double> borders = new List<double>(length - 1);
+            for (int random_border = 0; random_border < length - 1; random_border++)
+            {
+                borders.Add(random.NextDouble());
+            }
+            borders.Sort();
             // Calculating intervals.
             double summary = borders[0];
             probabilities.Add(borders[0]);
             for (int border_index = 0; border_index < borders.Count - 1; border_index++)
             {
-                // Generating new borders everytime.
-                borders.Clear();
-                for (int random_border = 0; random_border < length - 1; random_border++)
-                {
-                    borders.Add(random.NextDouble());
-                }
-                borders.Sort();
-                // Filling.
                 probabilities.Add(borders[border_index + 1] - borders[border_index]);
                 summary += probabilities.Last();
             }
