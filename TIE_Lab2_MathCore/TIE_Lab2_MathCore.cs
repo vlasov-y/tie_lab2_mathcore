@@ -248,5 +248,15 @@ namespace TIE_Lab2_MathCore
 
             return p_x;
         }
+
+        public ICollection<double> PiA()
+        {
+            return Pi(HSource.A);
+        }
+
+        public ICollection<double> PiB()
+        {
+            return Pi(HSource.B);
+        }
     }
 }
