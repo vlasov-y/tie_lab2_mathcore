@@ -79,7 +79,7 @@ namespace TIE_Lab2_MathCore
                 borders[random_border] = random.NextDouble();
             }
             borders.Sort();
-            // Calculating intervals
+            // Calculating intervals.
             double summary = 0;
             for (int border_index = 0; border_index < borders.Count - 1; border_index++)
             {
@@ -94,13 +94,14 @@ namespace TIE_Lab2_MathCore
         public IEnumerable<ICollection<double>> GenerateNewProbabilities()
         {
             CheckMatrixSizeSet();
-            // Generating different p(x)
+            // Generating different p(x).
             List<double> p_x_list = GenerateRandomProbabilitiesList(_probabilites.Count);
             
             for (int row_index = 0; row_index < _probabilites.Count; ++row_index)
             {
                 _probabilites[row_index].Clear();
                 List<double> percentages = GenerateRandomProbabilitiesList(_probabilites.Count);
+                // Smashing x_i by percent parts.
                 for (int percent_index = 0; percent_index < percentages.Count; percent_index++)
                 {
                     percentages[percent_index] *= p_x_list[percent_index];
@@ -118,7 +119,7 @@ namespace TIE_Lab2_MathCore
             // Creating new matrix.
             for (UInt16 index = 0; index < matrix_size; ++index)
             {
-                _probabilites.Add(new List<double>(matrix_size));
+                result_matrix.Add(new List<double>(matrix_size));
             }
             return result_matrix;
         }
@@ -129,25 +130,65 @@ namespace TIE_Lab2_MathCore
             return _probabilites;
         }
 
-        public IEnumerable<ICollection<double>> HAB()
+        public double HAB()
         {
-            List<List<double>> result_matrix = CreateResultMatrix();
-            // TODO Implement HAB
-            return _probabilites;
+            return HA() - HAsB();
         }
 
-        public IEnumerable<ICollection<double>> HAsB()
+        public double HAsB()
         {
-            List<List<double>> result_matrix = CreateResultMatrix();
-            // TODO Implement HAsB
-            return _probabilites;
+            double result = 0;
+            List<double> hasbi = (List<double>)HAsBi();
+            List<double> pi = (List<double>)Pi(HSource.B);
+
+            for (int i = 0; i < hasbi.Count; i++)
+            {
+                result += hasbi[i] * pi[i];
+            }
+
+            return result * -1.0d;
         }
 
-        public IEnumerable<ICollection<double>> HBsA()
+        private enum HsSource
         {
-            List<List<double>> result_matrix = CreateResultMatrix();
+            AsB,
+            BsA
+        }
+
+        private ICollection<double> Hs(HsSource source)
+        {
+            List<double> result_matrix = new List<double>(_probabilites.Count);
             // TODO Implement HBsA
-            return _probabilites;
+            double sum = 0;
+            for (int col = 0; col < _probabilites.Count; col++)
+            {
+                for (int row = 0; row < _probabilites.Count; row++)
+                {
+                    switch (source)
+                    {
+                        case HsSource.AsB:
+                            sum += _probabilites[col][row] * Math.Log(_probabilites[col][row], 2);
+                            break;
+                        case HsSource.BsA:
+                            sum += _probabilites[row][col] * Math.Log(_probabilites[row][col], 2);
+                            break;
+                        default:
+                            throw new Exception("Algorithm for calculation from new source is undefined.");
+                    }
+                }
+                result_matrix[col] = sum * -1.0d;
+            }
+            return result_matrix;
+        }
+
+        public ICollection<double> HAsBi()
+        {
+            return Hs(HsSource.AsB);
+        }
+
+        public ICollection<double> HBsAi()
+        {
+            return Hs(HsSource.BsA);
         }
 
         private enum HSource
@@ -157,6 +198,30 @@ namespace TIE_Lab2_MathCore
         }
 
         private double H(HSource source)
+        {
+            // Calculating all p(x_i)
+            List<double> p_x = (List<double>)Pi(source);
+            // Calculating H
+            double sum = 0;
+            for (int i = 0; i < p_x.Count; i++)
+            {
+                sum += p_x[i] * Math.Log(p_x[i], 2);
+            }
+
+            return sum * -1.0d;
+        }
+
+        public double HA()
+        {
+            return H(HSource.A);
+        }
+
+        public double HB()
+        {
+            return H(HSource.B);
+        }
+
+        private ICollection<double> Pi(HSource source)
         {
             // Calculating all p(x_i)
             double sum = 0;
@@ -180,24 +245,8 @@ namespace TIE_Lab2_MathCore
                 }
                 p_x.Add(sum);
             }
-            // Calculating H
-            sum = 0;
-            for (int i = 0; i < p_x.Count; i++)
-            {
-                sum += p_x[i] * Math.Log(p_x[i], 2);
-            }
 
-            return sum * -1.0d;
-        }
-
-        public double HA()
-        {
-            return H(HSource.A);
-        }
-
-        public double HB()
-        {
-            return H(HSource.B);
+            return p_x;
         }
     }
 }
