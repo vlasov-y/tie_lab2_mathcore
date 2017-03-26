@@ -164,7 +164,7 @@ namespace TIE_Lab2_MathCore
                 result += hasbi[i] * pi[i];
             }
 
-            return result * -1.0d;
+            return result;
         }
 
         public double HBsA()
@@ -178,7 +178,7 @@ namespace TIE_Lab2_MathCore
                 result += hbsai[i] * pi[i];
             }
 
-            return result * -1.0d;
+            return result;
         }
 
         private enum HsSource
